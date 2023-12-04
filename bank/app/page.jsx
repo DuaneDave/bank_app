@@ -1,10 +1,17 @@
-import Image from 'next/image';
-import styles from './page.module.css';
+'use client';
+
+import { useContext } from 'react';
+
+import userContext from '../store/userContext';
 
 export default function Home() {
+  const as = useContext(userContext);
+
+  console.log(as);
+
   return (
-    <main className={styles.main}>
-      <div>sbcjks</div>
+    <main>
+      <div className={`container`}>sbcjks</div>
     </main>
   );
 }

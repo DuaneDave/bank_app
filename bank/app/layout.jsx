@@ -3,7 +3,7 @@ import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
-import LayoutProvider from '@/component/layout/LayoutProvider';
+import LayoutProvider from '../component/layout/LayoutProvider';
 
 export const metadata = {
   title: 'Create Next App',
