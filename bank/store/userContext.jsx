@@ -59,10 +59,10 @@ export function UserProvider({ children }) {
           ],
         },
         account_balance: {
-          $actions: [{ who: 'author', can: 'read' }],
+          $actions: [{ who: 'author', of: 'transaction', can: 'read' }],
         },
         holder: {
-          $actions: [{ who: 'author', can: 'read' }],
+          $actions: [{ who: 'author', of: 'transaction', can: 'read' }],
         },
       },
     };
@@ -90,7 +90,7 @@ export function UserProvider({ children }) {
     const protocolDefinition = await createProtocolDefinition();
 
     const { protocols: localProtocol, status: localProtocolStatus } =
-      await queryForProtocol(web5);
+      await queryProtocolDefinition(web5);
 
     console.log({ localProtocol, localProtocolStatus });
 
@@ -212,7 +212,7 @@ export function UserProvider({ children }) {
     setTransactionShape,
   };
 
-  return <userContext.Provider value={{}}>{children}</userContext.Provider>;
+  return <userContext.Provider value={values}>{children}</userContext.Provider>;
 }
 
 export default userContext;
