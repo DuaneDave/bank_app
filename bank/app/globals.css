@@ -9,8 +9,16 @@ body {
   color: #ffffff;
 }
 
+main {
+  padding-inline: 1rem;
+}
+
 section {
   background: #191919;
+}
+
+ul {
+  list-style: none;
 }
 
 button {
