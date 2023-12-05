@@ -10,13 +10,7 @@ export function UserProvider({ children }) {
     web5: undefined,
     did: undefined,
   });
-  const [transactionShape, setTransactionShape] = useState({
-    sender: '',
-    recipient: '',
-    amount: '',
-    type: '',
-    timestamp: '',
-  });
+  const [allTransactions, setAllTransactions] = useState([]);
 
   useEffect(() => {
     const hookUpWeb5 = async () => {
@@ -114,44 +108,30 @@ export function UserProvider({ children }) {
     }
   };
 
-  //  read the transaction shape which would be set from the user input and then foward to the submit function to create a txn
-  const constructTransaction = () => {
-    const currentDate = new Date().toLocaleDateString();
-    const currentTime = new Date().toLocaleTimeString();
-
-    const transaction = {
-      sender: myDid,
-      recipient: transactionShape.recipient,
-      amount: amountValue,
-      timestamp: `${currentDate} ${currentTime}`,
-    };
-
-    return transaction;
-  };
-
-  const writeToDwn = async (ding) => {
-    const { record } = await foundData.web5.dwn.records.write({
+  const writeToDwn = async (transaction) => {
+    const response = await foundData.web5.dwn.records.write({
+      data: transaction.transaction,
       message: {
         protocol: 'https://54codes.xyz/transactions-protocol',
         protocolPath: 'transaction',
         schema: 'https://54codes.xyz/transactions-protocol/transaction',
-        data: ding,
-        recipients: transactionShape.recipient,
+        recipients: transaction.transaction.recipient,
       },
     });
 
-    return record;
+    console.log(response);
+    return response.record;
   };
 
-  const sendRecord = async (record) => {
-    return await record.send(transactionShape.recipient);
+  const sendRecord = async (record, recipient) => {
+    return await record.send(recipient);
   };
 
   const getDebitTransactions = async (web5, did) => {
     const response = await web5.dwn.records.query({
       message: {
         filter: {
-          protocol: 'https://blackgirlbytes.dev/dinger-chat-protocol',
+          protocol: 'https://54codes.xyz/transactions-protocol',
         },
       },
     });
@@ -163,7 +143,7 @@ export function UserProvider({ children }) {
           return data;
         })
       );
-      console.log(sentDings, 'I sent these dings');
+      // console.log(sentDings, 'I sent these transactions');
       return sentDings;
     } else {
       console.log('error', response.status);
@@ -175,8 +155,8 @@ export function UserProvider({ children }) {
       from: did,
       message: {
         filter: {
-          protocol: 'https://blackgirlbytes.dev/dinger-chat-protocol',
-          schema: 'https://blackgirlbytes.dev/ding',
+          protocol: 'https://54codes.xyz/transactions-protocol',
+          schema: 'https://54codes.xyz/transactions-protocol/transaction',
         },
       },
     });
@@ -184,11 +164,13 @@ export function UserProvider({ children }) {
     if (response.status.code === 200) {
       const recievedTransactions = await Promise.all(
         response.records.map(async (record) => {
+          console.log(record)
           const data = await record.data.json();
           return data;
         })
       );
-      console.log(recievedTransactions, 'I received these dings');
+
+      // console.log(recievedTransactions, 'I received these transactions');
       return recievedTransactions;
     } else {
       console.log('error', response.status);
@@ -204,16 +186,37 @@ export function UserProvider({ children }) {
       ...(creditTransactions || []),
     ];
 
-    //  create a global state for transactions
+    setAllTransactions(transactions);
+  };
+
+  const deleteTransaction = async (web5, did, transactionId) => {
+    const foundTransaction = allTransactions.filter(
+      (txn) => txn.id === transactionId
+    );
+
+    console.log(foundTransaction);
+
+    const response = await web5.dwn.records.delete({
+      message: {
+        recordId: transactionId,
+      },
+    });
+
+    console.log(response)
+    if (response.status.code === 200) {
+      console.log('Transaction deleted');
+    } else {
+      console.log('error', response.status);
+    }
   };
 
   const values = {
     foundData,
-    transactionShape,
-    setTransactionShape,
+    allTransactions,
     writeToDwn,
     sendRecord,
     getAllTransactions,
+    deleteTransaction,
   };
 
   return <userContext.Provider value={values}>{children}</userContext.Provider>;
