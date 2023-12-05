@@ -20,6 +20,9 @@ function SideBar() {
             <Link href="/credit">View Credits</Link>
           </li>
           <li>
+            <Link href="/all-transanctions">All transactions</Link>
+          </li>
+          <li>
             <Link href="/balance">View Balance</Link>
           </li>
         </ul>

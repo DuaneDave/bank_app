@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import styles from './page.module.css';
 
@@ -14,8 +15,6 @@ function CreateTxn({ onClose }) {
   const { foundData, writeToDwn, sendRecord, getAllTransactions } =
     useContext(userContext);
 
-  console.log(foundData.did);
-
   const handleSubmission = async (e) => {
     e.preventDefault();
 
@@ -28,6 +27,7 @@ function CreateTxn({ onClose }) {
 
     const transaction = {
       transaction: {
+        id: uuidv4(),
         sender: foundData.did,
         ...transactionShape,
         timestamp: new Date().toISOString(),
@@ -36,11 +36,9 @@ function CreateTxn({ onClose }) {
       holder: foundData.did,
     };
 
-    console.log(transaction);
-
     const record = await writeToDwn(transaction);
 
-    await sendRecord(record);
+    await sendRecord(record, transaction.transaction.recipient);
     await getAllTransactions(foundData.web5, foundData.did);
 
     setTransactionShape({
