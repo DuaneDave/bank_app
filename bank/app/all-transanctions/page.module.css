@@ -1,0 +1,35 @@
+.container {
+  padding-block: 3rem 2rem;
+}
+
+.container h1 {
+  font-size: 2rem;
+  margin-bottom: 3rem;
+}
+
+.tr,
+.thead {
+  grid-template-columns: 1fr 120px 1fr 1fr 1fr 50px;
+  text-align: left;
+  margin-inline: 1rem;
+}
+
+.thead {
+  font-size: 16px;
+}
+
+.tr {
+  font-size: 14px;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #303030;
+}
+
+.tr td {
+  padding: 0.5rem 0;
+}
+
+.tr td button{
+  padding: 0;
+  background: none;
+  border: none;
+}
