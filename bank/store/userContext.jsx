@@ -14,6 +14,7 @@ export function UserProvider({ children }) {
     sender: '',
     recipient: '',
     amount: '',
+    type: '',
     timestamp: '',
   });
 
@@ -210,6 +211,9 @@ export function UserProvider({ children }) {
     foundData,
     transactionShape,
     setTransactionShape,
+    writeToDwn,
+    sendRecord,
+    getAllTransactions,
   };
 
   return <userContext.Provider value={values}>{children}</userContext.Provider>;
