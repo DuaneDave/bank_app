@@ -1,5 +1,6 @@
+'use client';
+
 import { useContext, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
 import styles from './page.module.css';
 
@@ -27,7 +28,6 @@ function CreateTxn({ onClose }) {
 
     const transaction = {
       transaction: {
-        id: uuidv4(),
         sender: foundData.did,
         ...transactionShape,
         timestamp: new Date().toISOString(),

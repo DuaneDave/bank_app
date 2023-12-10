@@ -4,13 +4,15 @@
   box-sizing: border-box;
 }
 
-body {
-  background: #121212;
-  color: #ffffff;
+:root {
+  --primary-color: #6032eb;
+  --secondary-color: #fff;
+  --tertiary-color: #121212;
 }
 
-main {
-  padding-inline: 1rem;
+body {
+  background: var(--tertiary-color);
+  color: var(--secondary-color);
 }
 
 section {
@@ -23,7 +25,7 @@ ul {
 
 button {
   cursor: pointer;
-  background: #6032eb;
+  background: var(--primary-color);
   color: inherit;
   border: none;
   border-radius: 5px;

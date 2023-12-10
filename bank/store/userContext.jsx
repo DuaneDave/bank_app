@@ -1,20 +1,25 @@
 'use client';
 
 import { createContext, useEffect, useState } from 'react';
-import { Web5 } from '@web5/api';
+// import { Web5 } from '@web5/api';
 
 const userContext = createContext();
+
+const protocolStr = 'https://54codes.xyz/transactions-protocol';
 
 export function UserProvider({ children }) {
   const [foundData, setFoundData] = useState({
     web5: undefined,
     did: undefined,
   });
-  const [allTransactions, setAllTransactions] = useState([]);
 
+  const [allTransactions, setAllTransactions] = useState([]);
   useEffect(() => {
     const hookUpWeb5 = async () => {
+      const { Web5 } = await import('@web5/api');
       const { web5, did } = await Web5.connect();
+
+      console.log({ web5, did });
 
       setFoundData({ web5, did });
 
@@ -29,35 +34,35 @@ export function UserProvider({ children }) {
 
   const createProtocolDefinition = () => {
     return {
-      protocol: 'https://54codes.xyz/transactions-protocol',
+      protocol: `${protocolStr}`,
       published: true,
       types: {
         transaction: {
-          schema: 'https://54codes.xyz/transactions-protocol/transaction',
-          dataFormats: ['application/json'],
+          schema: `${protocolStr}/transaction`,
+          dataFormats: [`application/json`],
         },
         account_balance: {
-          schema: 'https://54codes.xyz/transactions-protocol/account_balance',
-          dataFormats: ['text/plain'],
+          schema: `${protocolStr}/account_balance`,
+          dataFormats: [`text/plain`],
         },
         holder: {
-          schema: 'https://54codes.xyz/transactions-protocol/holder',
-          dataFormats: ['text/plain'],
+          schema: `${protocolStr}/holder`,
+          dataFormats: [`text/plain`],
         },
       },
       structure: {
         transaction: {
           $actions: [
-            { who: 'anyone', can: 'write' },
-            { who: 'author', of: 'transaction', can: 'read' },
-            { who: 'recipient', of: 'transaction', can: 'read' },
+            { who: `anyone`, can: `write` },
+            { who: `author`, of: `transaction`, can: `read` },
+            { who: `recipient`, of: `transaction`, can: `read` },
           ],
         },
         account_balance: {
-          $actions: [{ who: 'author', of: 'transaction', can: 'read' }],
+          $actions: [{ who: `author`, of: `transaction`, can: `read` }],
         },
         holder: {
-          $actions: [{ who: 'author', of: 'transaction', can: 'read' }],
+          $actions: [{ who: `author`, of: `transaction`, can: `read` }],
         },
       },
     };
@@ -67,7 +72,7 @@ export function UserProvider({ children }) {
     return await web5.dwn.protocols.query({
       message: {
         filter: {
-          protocol: 'https://54codes.xyz/transactions-protocol',
+          protocol: `${protocolStr}`,
         },
       },
     });
@@ -95,16 +100,16 @@ export function UserProvider({ children }) {
         protocolDefinition
       );
 
-      console.log('Protocol installed locally', protocol, status);
+      console.log(`Protocol installed locally`, protocol, status);
 
       const { status: configureRemoteStatus } = await protocol.send(did);
 
       console.log(
-        'Did the protocol install on the remote DWN?',
+        `Did the protocol install on the remote DWN?`,
         configureRemoteStatus
       );
     } else {
-      console.log('Protocol already installed');
+      console.log(`Protocol already installed`);
     }
   };
 
@@ -112,9 +117,9 @@ export function UserProvider({ children }) {
     const response = await foundData.web5.dwn.records.write({
       data: transaction.transaction,
       message: {
-        protocol: 'https://54codes.xyz/transactions-protocol',
-        protocolPath: 'transaction',
-        schema: 'https://54codes.xyz/transactions-protocol/transaction',
+        protocol: `${protocolStr}`,
+        protocolPath: `transaction`,
+        schema: `${protocolStr}/transaction`,
         recipients: transaction.transaction.recipient,
       },
     });
@@ -131,7 +136,7 @@ export function UserProvider({ children }) {
     const response = await web5.dwn.records.query({
       message: {
         filter: {
-          protocol: 'https://54codes.xyz/transactions-protocol',
+          protocol: `${protocolStr}`,
         },
       },
     });
@@ -143,10 +148,10 @@ export function UserProvider({ children }) {
           return data;
         })
       );
-      // console.log(sentDings, 'I sent these transactions');
+      // console.log(sentDings, `I sent these transactions`);
       return sentDings;
     } else {
-      console.log('error', response.status);
+      console.log(`error`, response.status);
     }
   };
 
@@ -155,8 +160,8 @@ export function UserProvider({ children }) {
       from: did,
       message: {
         filter: {
-          protocol: 'https://54codes.xyz/transactions-protocol',
-          schema: 'https://54codes.xyz/transactions-protocol/transaction',
+          protocol: `${protocolStr}`,
+          schema: `${protocolStr}/transaction`,
         },
       },
     });
@@ -164,16 +169,16 @@ export function UserProvider({ children }) {
     if (response.status.code === 200) {
       const recievedTransactions = await Promise.all(
         response.records.map(async (record) => {
-          console.log(record)
+          console.log(record);
           const data = await record.data.json();
           return data;
         })
       );
 
-      // console.log(recievedTransactions, 'I received these transactions');
+      // console.log(recievedTransactions, `I received these transactions`);
       return recievedTransactions;
     } else {
-      console.log('error', response.status);
+      console.log(`error`, response.status);
     }
   };
 
@@ -202,11 +207,11 @@ export function UserProvider({ children }) {
       },
     });
 
-    console.log(response)
+    console.log(response);
     if (response.status.code === 200) {
-      console.log('Transaction deleted');
+      console.log(`Transaction deleted`);
     } else {
-      console.log('error', response.status);
+      console.log(`error`, response.status);
     }
   };
 

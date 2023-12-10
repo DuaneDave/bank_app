@@ -2,3 +2,49 @@
   grid-template-columns: 250px 1fr;
   height: 100vh;
 }
+
+.sideBar {
+  padding-block: 2.5rem 2rem;
+}
+
+.sideBar > a {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-left: 2rem;
+}
+
+.navItems {
+  margin-top: 3.5rem;
+}
+
+.navItems li {
+  padding: 0.5rem 2rem;
+  color: #fff;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.navItems li.active {
+  background: #ffffff18;
+  backdrop-filter: blur(10px);
+  position: relative;
+  color: var(--secondary-color);
+  opacity: 1;
+}
+
+.navItems li.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 5px;
+  background: var(--primary-color);
+  border-radius: 0 5px 5px 0;
+}
+
+.navItems li:hover {
+  background: #ffffff08;
+  color: var(--secondary-color);
+  opacity: 1;
+}
