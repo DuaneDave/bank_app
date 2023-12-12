@@ -6,15 +6,26 @@
 .sideBar {
   padding-block: 2.5rem 2rem;
 }
-
-.sideBar > a {
+.sideBar button{
+  background: none;
   font-size: 1.2rem;
-  font-weight: 600;
+  padding: 8px 5px;
+  font-weight: 800;
+  color:purple;
+}
+.sideBar > a {
+
+  font-weight: 800;
   margin-left: 2rem;
 }
 
 .navItems {
   margin-top: 3.5rem;
+}
+.navItems button{
+  background: none;
+  text-align: left;
+  font-weight: 600;
 }
 
 .navItems li {

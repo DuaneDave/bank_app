@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import styles from './layout.module.css';
 
 const links = [
-  { href: '/', label: 'My Profile' },
+  { href: '/my_profile', label: 'My Profile' },
   { href: '/create-transaction', label: 'Create Transaction' },
   { href: '/debit', label: 'View Debits' },
   { href: '/credit', label: 'View Credits' },
@@ -20,16 +20,17 @@ function SideBar() {
   return (
     <aside>
       <nav className={`full-height flex flex-col ${styles.sideBar}`}>
-        <Link href="/">54Banking</Link>
+        <button><Link href="/">WEB5-BANK</Link></button>
 
         <ul className={`flex flex-col ${styles.navItems}`}>
           {links.map(({ href, label }) => (
-            <li
-              key={href}
-              className={`${pathName === href ? styles.active : ''}`}
-            >
+            <button  
+            key={href}
+            className={`${pathName === href ? styles.active : ''}`}>
+              <li>
               <Link href={href}>{label}</Link>
             </li>
+            </button>
           ))}
         </ul>
       </nav>

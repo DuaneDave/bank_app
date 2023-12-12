@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState, useRef } from 'react';
 // import { Web5 } from '@web5/api';
 
 const userContext = createContext();
@@ -12,7 +12,8 @@ export function UserProvider({ children }) {
     web5: undefined,
     did: undefined,
   });
-
+  const getName = useRef(null)
+const [userName, setUserName] = useState('');
   const [allTransactions, setAllTransactions] = useState([]);
   useEffect(() => {
     const hookUpWeb5 = async () => {
@@ -222,6 +223,10 @@ export function UserProvider({ children }) {
     sendRecord,
     getAllTransactions,
     deleteTransaction,
+    getName,
+    setUserName,
+    userName
+    
   };
 
   return <userContext.Provider value={values}>{children}</userContext.Provider>;
