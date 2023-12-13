@@ -1,12 +1,14 @@
 'use client';
-import { useContext} from 'react';
+import { useContext, useState } from 'react';
 import './profile.css'
 import ReactPlaceholder from 'react-placeholder';
 import "react-placeholder/lib/reactPlaceholder.css";
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 import userContext from '../../store/userContext';
 import Link from 'next/link';
 function page() {
     const { foundData, userName } = useContext(userContext);
+    const [isCopied, setIsCopied ] = useState(false);
     const link = [
         
         { href: '/create-transaction', label: 'Create New Transaction' },
@@ -21,15 +23,20 @@ function page() {
             <h1 className="profile_title">My Profile</h1>
             <div className="profile_data">
             <ReactPlaceholder
-                     showLoadingAnimation
-                    type='round'
-                    color='#E0E0E0'
-                    style={{ width: 200, height: 200, margin: 50, }}>
+                        showLoadingAnimation
+                        type='round'
+                        color='#E0E0E0'
+                        style={{ width: 200, height: 200, margin: 50, }}>
 
-                    </ReactPlaceholder>
+            </ReactPlaceholder>
                     <div className='get_other'>
                 <h3 className="profile_name">{userName}</h3>
-                <button className="copy">Copy Your DID</button>
+                <CopyToClipboard text={foundData?.did}
+                onCopy={() => setIsCopied(true)}
+                >   
+                    <button className="copy">{!isCopied ? 'Copy Your DID' : 'Copied'}</button>
+                </CopyToClipboard>
+                
                 <p className="balance">Balance: <span>1000</span></p>
                 </div>
                 <div className="list_fun">
