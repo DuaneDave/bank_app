@@ -20,10 +20,6 @@ const [userName, setUserName] = useState('');
       const { Web5 } = await import('@web5/api');
       const { web5, did } = await Web5.connect();
 
-      console.log({ web5, did });
-
-      setFoundData({ web5, did });
-
       if (web5 && did) {
         await configureProtocol(web5, did);
         await getAllTransactions(web5, did);
@@ -93,22 +89,14 @@ const [userName, setUserName] = useState('');
     const { protocols: localProtocol, status: localProtocolStatus } =
       await queryProtocolDefinition(web5);
 
-    console.log({ localProtocol, localProtocolStatus });
-
     if (localProtocolStatus.code !== 200 || localProtocol.length === 0) {
       const { protocol, status } = await installProtocolLocally(
         web5,
         protocolDefinition
       );
 
-      console.log(`Protocol installed locally`, protocol, status);
-
       const { status: configureRemoteStatus } = await protocol.send(did);
 
-      console.log(
-        `Did the protocol install on the remote DWN?`,
-        configureRemoteStatus
-      );
     } else {
       console.log(`Protocol already installed`);
     }
@@ -124,8 +112,6 @@ const [userName, setUserName] = useState('');
         recipients: transaction.transaction.recipient,
       },
     });
-
-    console.log(response);
     return response.record;
   };
 
@@ -170,7 +156,6 @@ const [userName, setUserName] = useState('');
     if (response.status.code === 200) {
       const recievedTransactions = await Promise.all(
         response.records.map(async (record) => {
-          console.log(record);
           const data = await record.data.json();
           return data;
         })
@@ -196,13 +181,13 @@ const [userName, setUserName] = useState('');
   };
 
   const deleteTransaction = async (web5, did, transactionId) => {
-    const foundTransaction = allTransactions.filter(
-      (txn) => txn.id === transactionId
-    );
-
-    console.log(foundTransaction);
+    // const foundTransaction = allTransactions.filter(
+    //   (txn) => txn.id === transactionId
+    //   // txn.id === transactionId
+    // );
 
     const response = await web5.dwn.records.delete({
+      from: foundData.did,
       message: {
         recordId: transactionId,
       },
